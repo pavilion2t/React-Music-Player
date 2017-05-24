@@ -4,9 +4,7 @@ var path = "./photos/";
 
 
 fs.readdir(path, function (err, files) {
-    if (err) {
-        return;
-    }
+    if (err) {return;}
     
     var arr = [];
     (function iterator(index) {
