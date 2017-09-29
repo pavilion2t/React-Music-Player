@@ -9,14 +9,12 @@ let List = React.createClass({
     			<ListItem
     				key={item.id}
     				data={item}
-                    focus={this.props.currentMusitItem === item}
+            focus={this.props.currentMusitItem === item}
     			></ListItem>
     		);
     	});
         return (
-            <ul>
-                { Items }
-            </ul>
+            <ul>{ Items }</ul>
         );
     }
 });
