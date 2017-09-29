@@ -1,3 +1,4 @@
+//在Root.js中引入该数据
 export const MUSIC_LIST = [
 	{
 		id: 1,

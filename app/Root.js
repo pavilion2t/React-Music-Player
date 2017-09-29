@@ -18,13 +18,16 @@ let App = React.createClass({
 		});
 
 		this.playMusic(this.state.musicList[0]);
-		
+
 		$("#player").bind($.jPlayer.event.ended, (e) => {
 			this.playWhenEnd();
 		});
+		//事件绑定，102行播放函数
 		PubSub.subscribe('PLAY_MUSIC', (msg, item) => {
 			this.playMusic(item);
 		});
+
+		//删除采用过滤操作
 		PubSub.subscribe('DEL_MUSIC', (msg, item) => {
 			this.setState({
 				musicList: this.state.musicList.filter((music) => {
@@ -51,6 +54,7 @@ let App = React.createClass({
 			});
 		});
 	},
+
 	componentWillUnmount() {
 		PubSub.unsubscribe('PLAY_MUSIC');
 		PubSub.unsubscribe('DEL_MUSIC');
@@ -58,6 +62,7 @@ let App = React.createClass({
 		PubSub.unsubscribe('PLAY_NEXT');
 		PubSub.unsubscribe('PLAY_PREV');
 	},
+
 	getInitialState() {
 		return {
 			musicList: MUSIC_LIST,
@@ -65,6 +70,7 @@ let App = React.createClass({
 			repeatType: 'cycle'
 		}
 	},
+
 	playWhenEnd() {
 		if (this.state.repeatType === 'random') {
 			let index = this.findMusicIndex(this.state.currentMusitItem);
@@ -79,9 +85,11 @@ let App = React.createClass({
 			this.playNext();
 		}
 	},
+
 	playNext(type = 'next') {
+		//最后一首+1会造成数组溢出问题，0-1会出现负数
 		let index = this.findMusicIndex(this.state.currentMusitItem);
-		if (type === 'next') {		
+		if (type === 'next') {
 			index = (index + 1) % this.state.musicList.length;
 		} else {
 			index = (index + this.state.musicList.length - 1) % this.state.musicList.length;
@@ -92,10 +100,13 @@ let App = React.createClass({
 		});
 		this.playMusic(musicItem);
 	},
+
 	findMusicIndex(music) {
 		let index = this.state.musicList.indexOf(music);
 		return Math.max(0, index);
 	},
+
+	//设置播放的文件，同时更新组件的事件状态
 	playMusic(item) {
 		$("#player").jPlayer("setMedia", {
 			mp3: item.file
@@ -104,16 +115,18 @@ let App = React.createClass({
 			currentMusitItem: item
 		});
 	},
-    render() {
+  render() {
         return (
             <div className="container">
             	<Logo></Logo>
+							//cloneElement方法对组件进行克隆，并且传值
             	{React.cloneElement(this.props.children, this.state)}
             </div>
         );
     }
 });
 
+// Route可以嵌套
 let Root = React.createClass({
 	render() {
 	    return (

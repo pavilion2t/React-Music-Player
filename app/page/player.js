@@ -1,12 +1,22 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Progress from '../components/progress';
 import { Link } from 'react-router';
 let PubSub = require('pubsub-js');
 require('./player.less');
-
+//音乐播放页面
 let duration = null;
 
-let Player = React.createClass({
+export class Player extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			progress: 0,
+			volume: 0,
+			isPlay: true,
+			leftTime: ''
+		}
+	}
+
 	componentDidMount() {
 		$("#player").bind($.jPlayer.event.timeupdate, (e) => {
 			duration = e.jPlayer.status.duration;
@@ -16,26 +26,30 @@ let Player = React.createClass({
 				leftTime: this.formatTime(duration * (1 - e.jPlayer.status.currentPercentAbsolute / 100))
 			});
 		});
-	},
+	}
+
 	componentWillUnmount() {
 		$("#player").unbind($.jPlayer.event.timeupdate);
-	},
+	}
+
 	formatTime(time) {
 		time = Math.floor(time);
 		let miniute = Math.floor(time / 60);
 		let seconds = Math.floor(time % 60);
-
 		return miniute + ':' + (seconds < 10 ? '0' + seconds : seconds);
-	},
+	}
+
 	changeProgressHandler(progress) {
 		$("#player").jPlayer("play", duration * progress);
 		this.setState({
 			isPlay: true
 		});
-	},
+	}
+
 	changeVolumeHandler(progress) {
 		$("#player").jPlayer("volume", progress);
-	},
+	}
+
 	play() {
 		if (this.state.isPlay) {
 			$("#player").jPlayer("pause");
@@ -45,24 +59,20 @@ let Player = React.createClass({
 		this.setState({
 			isPlay: !this.state.isPlay
 		});
-	},
+	}
+
 	next() {
 		PubSub.publish('PLAY_NEXT');
-	},
+	}
+
 	prev() {
 		PubSub.publish('PLAY_PREV');
-	},
+	}
+
 	changeRepeat() {
 		PubSub.publish('CHANAGE_REPEAT');
-	},
-	getInitialState() {
-		return {
-			progress: 0,
-			volume: 0,
-			isPlay: true,
-			leftTime: ''
-		}
-	},	
+	}
+
     render() {
         return (
             <div className="player-page">
@@ -110,6 +120,6 @@ let Player = React.createClass({
             </div>
         );
     }
-});
+}
 
 export default Player;

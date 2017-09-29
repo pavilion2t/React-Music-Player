@@ -1,7 +1,10 @@
-import React from 'react';
-require('./logo.less');
+import React, {Component} from 'react';
+import './logo.less';
 
-let Logo = React.createClass({
+export class Logo extends Component{
+	constructor(props){
+		super(props);
+	}
     render() {
         return (
         	<div className="row components-logo">
@@ -10,6 +13,6 @@ let Logo = React.createClass({
         	</div>
         );
     }
-});
+};
 
 export default Logo;
