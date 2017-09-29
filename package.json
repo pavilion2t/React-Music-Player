@@ -14,11 +14,11 @@
     "react",
     "redux"
   ],
-  "author": "musiq",
+  "author": "pavilion2t",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xiaolin3303/react-music-player"
+    "url": "git+https://github.com/pavilion2t/React-Music-Player"
   },
   "dependencies": {
     "pubsub-js": "^1.5.4",

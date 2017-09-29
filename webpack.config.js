@@ -6,12 +6,14 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     devtool: 'eval-source-map',
+    //入口文件
     entry: [
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
-        'react-hot-loader/patch',
+        'react-hot-loader/patch',//热更新工具
         path.join(__dirname, 'app/index.js')
     ],
+    //生成包文件的放置位置
     output: {
         path: path.join(__dirname, '/dist/'),
         filename: '[name].js',

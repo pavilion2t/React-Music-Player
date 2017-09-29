@@ -1,4 +1,4 @@
-import React, { render } from 'react';
+import React, { Component } from 'react';
 import { Router, IndexRoute, Link, Route, browserHistory, hashHistory} from 'react-router';
 import { MUSIC_LIST } from './config/config';
 import { randomRange } from './utils/util';
@@ -8,8 +8,17 @@ import PlayerPage from './page/player';
 import listPage from './page/list';
 import Logo from './components/logo'
 
+class App extends Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			musicList: MUSIC_LIST,
+			currentMusitItem: {},
+			repeatType: 'cycle'
+		}
 
-let App = React.createClass({
+	}
+
 	componentDidMount() {
 		$("#player").jPlayer({
 			supplied: "mp3",
@@ -53,7 +62,7 @@ let App = React.createClass({
 				repeatType: repeatList[index]
 			});
 		});
-	},
+	}
 
 	componentWillUnmount() {
 		PubSub.unsubscribe('PLAY_MUSIC');
@@ -61,15 +70,7 @@ let App = React.createClass({
 		PubSub.unsubscribe('CHANAGE_REPEAT');
 		PubSub.unsubscribe('PLAY_NEXT');
 		PubSub.unsubscribe('PLAY_PREV');
-	},
-
-	getInitialState() {
-		return {
-			musicList: MUSIC_LIST,
-			currentMusitItem: {},
-			repeatType: 'cycle'
-		}
-	},
+	}
 
 	playWhenEnd() {
 		if (this.state.repeatType === 'random') {
@@ -84,7 +85,7 @@ let App = React.createClass({
 		} else {
 			this.playNext();
 		}
-	},
+	}
 
 	playNext(type = 'next') {
 		//最后一首+1会造成数组溢出问题，0-1会出现负数
@@ -99,14 +100,15 @@ let App = React.createClass({
 			currentMusitItem: musicItem
 		});
 		this.playMusic(musicItem);
-	},
+	}
 
 	findMusicIndex(music) {
 		let index = this.state.musicList.indexOf(music);
 		return Math.max(0, index);
-	},
+	}
 
-	//设置播放的文件，同时更新组件的事件状态
+
+	  //设置播放的文件，同时更新组件的事件状态
 	playMusic(item) {
 		$("#player").jPlayer("setMedia", {
 			mp3: item.file
@@ -114,30 +116,36 @@ let App = React.createClass({
 		this.setState({
 			currentMusitItem: item
 		});
-	},
+	}
+
+	//cloneElement方法对组件进行克隆，并且传值
   render() {
         return (
             <div className="container">
             	<Logo></Logo>
-							//cloneElement方法对组件进行克隆，并且传值
             	{React.cloneElement(this.props.children, this.state)}
             </div>
         );
     }
-});
+}
 
 // Route可以嵌套
-let Root = React.createClass({
+export class Root extends Component{
+	constructor(props){
+		super(props);
+	}
+
 	render() {
-	    return (
-		    <Router history={hashHistory}>
-		        <Route path="/" component={App}>
-		            <IndexRoute component={PlayerPage}/>
-		            <Route path="/list" component={listPage} />
-		        </Route>
-		    </Router>
+			return (
+				<Router history={hashHistory}>
+						<Route path="/" component={App}>
+								<IndexRoute component={PlayerPage}/>
+								<Route path="/list" component={listPage} />
+						</Route>
+				</Router>
 		);
 	}
-});
+
+}
 
 export default Root;
